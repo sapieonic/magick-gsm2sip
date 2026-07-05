@@ -4,6 +4,10 @@ on:
   push:
     branches: ["main"]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: write
   pull-requests: write
@@ -12,6 +16,14 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
+      # NOTE: this step opens/updates the release PR using the default
+      # GITHUB_TOKEN. GitHub's anti-recursion rule means that PR's own push
+      # will NOT trigger ci.yml automatically, so it will show no status
+      # checks — review the diff (a version.txt/CHANGELOG.md bump) and,
+      # before merging, manually re-run ci.yml against that branch (or
+      # push an empty commit to it) to get a green build. To make CI trigger
+      # automatically instead, pass a personal access token or GitHub App
+      # token here via the `token:` input.
       - uses: googleapis/release-please-action@v4
         with:
           config-file: release-please-config.json

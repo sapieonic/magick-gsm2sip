@@ -16,12 +16,32 @@ val usePjsipStub = !pjsipAar.exists() && !pjsipJar.exists()
 // version.txt (repo root) is the single source of truth, bumped by the
 // release-please workflow (.github/workflows/release-please.yml) from
 // Conventional Commits merged to main. versionCode is derived from it so
-// the two never drift: MAJOR*1_000_000 + MINOR*1_000 + PATCH.
-val versionNameProp = rootProject.file("version.txt").readText().trim()
+// the two never drift: MAJOR*1_000_000 + MINOR*1_000 + PATCH. MINOR and
+// PATCH must each stay below 1000 or they collide with the next unit.
+val versionFile = rootProject.layout.projectDirectory.file("version.txt")
+check(versionFile.asFile.exists()) {
+    "version.txt not found at repo root (${versionFile.asFile}); it must be checked in as the " +
+        "single source of truth for versionName/versionCode."
+}
+val versionNameProp = providers.fileContents(versionFile).asText.get().trim()
 val (versionMajor, versionMinor, versionPatch) = versionNameProp
     .split("-", limit = 2)[0]
     .split(".")
-    .map { it.toInt() }
+    .also {
+        require(it.size == 3) {
+            "version.txt must be MAJOR.MINOR.PATCH (optionally with a -prerelease " +
+                "suffix), got '$versionNameProp'"
+        }
+    }
+    .map {
+        it.toIntOrNull()
+            ?: throw GradleException("version.txt component '$it' is not a number (got '$versionNameProp')")
+    }
+    .also { (_, minor, patch) ->
+        require(minor < 1000 && patch < 1000) {
+            "version.txt MINOR and PATCH must be < 1000 to keep versionCode collision-free, got '$versionNameProp'"
+        }
+    }
     .let { Triple(it[0], it[1], it[2]) }
 val computedVersionCode = versionMajor * 1_000_000 + versionMinor * 1_000 + versionPatch
 
