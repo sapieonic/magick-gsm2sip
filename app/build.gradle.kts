@@ -54,6 +54,14 @@ android {
         // stub. At runtime System.loadLibrary("pjsua2") fails gracefully and SIP
         // stays disabled until a real AAR is dropped into app/libs/.
         sourceSets.getByName("main").java.srcDir("src/pjsipStub/java")
+    } else {
+        // Real PJSIP bindings drive the app, but the SWIG jar's classes require
+        // libpjsua2.so, which cannot load in plain JVM / Robolectric unit tests
+        // (UnsatisfiedLinkError). The stub is binary-compatible with the real
+        // bindings, so compile & run the unit tests against it instead. The real
+        // jar is also filtered off the unit-test classpath below so there is a
+        // single, native-free source of the org.pjsip.pjsua2.* classes for tests.
+        sourceSets.getByName("test").java.srcDir("src/pjsipStub/java")
     }
 
     defaultConfig {
@@ -134,6 +142,16 @@ android {
         jniLibs {
             useLegacyPackaging = false
         }
+    }
+}
+
+// Keep the native pjsua2.jar off the JVM unit-test classpath so tests resolve
+// the stub source set added above instead of the SWIG bindings (which would try
+// to System.loadLibrary("pjsua2") and fail on the JVM). The app/APK variants are
+// unaffected and still ship the real bindings + .so.
+if (!usePjsipStub) {
+    tasks.withType<Test>().configureEach {
+        classpath = classpath.filter { it != pjsipJar }.let { files(it) }
     }
 }
 

@@ -7,13 +7,24 @@
  * excluded (see app/build.gradle.kts) and the genuine bindings are used.
  * At runtime with the stub, System.loadLibrary("pjsua2") fails and SIP is
  * disabled gracefully.
+ *
+ * NOTE: SWIG getter/setter shape so the stub is BINARY-compatible with the real
+ * bindings (unit tests run against it after app code compiled against the jar).
  */
 package org.pjsip.pjsua2;
 
 public class MediaFormatAudio extends MediaFormat {
-    public long clockRate;
-    public long channelCount;
-    public long bitsPerSample;
-    public long frameTimeUsec;
+    private long clockRate;
+    private long channelCount;
+    private long bitsPerSample;
+    private long frameTimeUsec;
     public MediaFormatAudio() {}
+    public long getClockRate() { return clockRate; }
+    public void setClockRate(long value) { this.clockRate = value; }
+    public long getChannelCount() { return channelCount; }
+    public void setChannelCount(long value) { this.channelCount = value; }
+    public long getBitsPerSample() { return bitsPerSample; }
+    public void setBitsPerSample(long value) { this.bitsPerSample = value; }
+    public long getFrameTimeUsec() { return frameTimeUsec; }
+    public void setFrameTimeUsec(long value) { this.frameTimeUsec = value; }
 }
