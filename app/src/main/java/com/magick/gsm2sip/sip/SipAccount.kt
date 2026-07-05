@@ -33,7 +33,7 @@ class SipAccount(
     }
 
     override fun onRegState(prm: OnRegStateParam) {
-        val code = prm.code.swigValue()
+        val code = prm.code
         val active = info.regIsActive
         val state = when {
             code / 100 == 2 && active -> SipRegState.Registered

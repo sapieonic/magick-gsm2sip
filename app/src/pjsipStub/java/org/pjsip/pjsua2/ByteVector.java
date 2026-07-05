@@ -10,4 +10,4 @@
  */
 package org.pjsip.pjsua2;
 
-public class ByteVector extends java.util.ArrayList<Byte> { public ByteVector() {} }
+public class ByteVector extends java.util.ArrayList<Short> { public ByteVector() {} }

@@ -4,7 +4,7 @@ import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.pjsip.pjsua2.MediaFrame
-import org.pjsip.pjsua2.MediaFrameType
+import org.pjsip.pjsua2.pjmedia_frame_type
 
 /**
  * Verifies the jitter-buffer plumbing of [GsmAudioPort] without any native
@@ -28,7 +28,7 @@ class GsmAudioPortTest {
     fun `onFrameReceived queues SIP audio toward the GSM side`() {
         val p = port()
         val frame = MediaFrame().apply {
-            type = MediaFrameType.PJMEDIA_FRAME_TYPE_AUDIO
+            type = pjmedia_frame_type.PJMEDIA_FRAME_TYPE_AUDIO
             buf = byteArrayOf(10, 20, 30, 40).toByteVectorSafe(4)
         }
         p.onFrameReceived(frame)
@@ -60,7 +60,7 @@ class GsmAudioPortTest {
         val p = port()
         p.pushFromGsm(byteArrayOf(1))
         p.onFrameReceived(MediaFrame().apply {
-            type = MediaFrameType.PJMEDIA_FRAME_TYPE_AUDIO
+            type = pjmedia_frame_type.PJMEDIA_FRAME_TYPE_AUDIO
             buf = byteArrayOf(2).toByteVectorSafe(1)
         })
         p.reset()

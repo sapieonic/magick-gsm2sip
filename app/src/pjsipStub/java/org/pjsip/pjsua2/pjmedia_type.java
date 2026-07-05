@@ -7,9 +7,14 @@
  * excluded (see app/build.gradle.kts) and the genuine bindings are used.
  * At runtime with the stub, System.loadLibrary("pjsua2") fails and SIP is
  * disabled gracefully.
+ *
+ * NOTE: real pjsua2 (SWIG) exposes enums as plain int constants, not Java
+ * enums — this stub matches that shape.
  */
 package org.pjsip.pjsua2;
 
-public enum pjmedia_type {
-    PJMEDIA_TYPE_NONE, PJMEDIA_TYPE_AUDIO, PJMEDIA_TYPE_VIDEO
+public final class pjmedia_type {
+    public static final int PJMEDIA_TYPE_NONE = 0;
+    public static final int PJMEDIA_TYPE_AUDIO = 1;
+    public static final int PJMEDIA_TYPE_VIDEO = 2;
 }

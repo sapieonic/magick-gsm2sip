@@ -113,10 +113,10 @@ class SipStack(private val listener: SipListener) {
     }
 
     /** Reject/terminate a call with the given SIP status code. */
-    fun hangup(callId: Int, code: Int = pjsip_status_code.PJSIP_SC_DECLINE.swigValue()) =
+    fun hangup(callId: Int, code: Int = pjsip_status_code.PJSIP_SC_DECLINE) =
         withCall(callId) { call ->
             val prm = CallOpParam(true)
-            prm.statusCode = pjsip_status_code.swigToEnum(code)
+            prm.statusCode = code
             call.hangup(prm)
             GatewayLog.i(LogTag.SIP, "hung up SIP call $callId (code=$code)")
         }

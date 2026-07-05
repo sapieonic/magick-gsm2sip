@@ -11,7 +11,8 @@
 package org.pjsip.pjsua2;
 
 public class MediaFrame {
-    public MediaFrameType type = MediaFrameType.PJMEDIA_FRAME_TYPE_NONE;
+    public int type = pjmedia_frame_type.PJMEDIA_FRAME_TYPE_NONE;
+    public long size = 0;
     public ByteVector buf = new ByteVector();
     public MediaFrame() {}
 }

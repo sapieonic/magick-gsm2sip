@@ -11,7 +11,7 @@
 package org.pjsip.pjsua2;
 
 public class CallOpParam {
-    public pjsip_status_code statusCode = pjsip_status_code.PJSIP_SC_OK;
+    public int statusCode = pjsip_status_code.PJSIP_SC_OK;
     public CallOpParam() {}
     public CallOpParam(boolean useDefaultCallSetting) {}
 }

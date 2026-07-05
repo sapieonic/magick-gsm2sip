@@ -7,9 +7,15 @@
  * excluded (see app/build.gradle.kts) and the genuine bindings are used.
  * At runtime with the stub, System.loadLibrary("pjsua2") fails and SIP is
  * disabled gracefully.
+ *
+ * NOTE: real pjsua2 (SWIG) exposes enums as plain int constants, not Java
+ * enums — this stub matches that shape.
  */
 package org.pjsip.pjsua2;
 
-public enum pjsip_transport_type_e {
-    PJSIP_TRANSPORT_UDP, PJSIP_TRANSPORT_TCP, PJSIP_TRANSPORT_TLS
+public final class pjsip_transport_type_e {
+    public static final int PJSIP_TRANSPORT_UNSPECIFIED = 0;
+    public static final int PJSIP_TRANSPORT_UDP = 1;
+    public static final int PJSIP_TRANSPORT_TCP = 2;
+    public static final int PJSIP_TRANSPORT_TLS = 3;
 }

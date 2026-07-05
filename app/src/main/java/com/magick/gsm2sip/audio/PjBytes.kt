@@ -6,7 +6,7 @@ import org.pjsip.pjsua2.ByteVector
 fun ByteVector.toByteArray(): ByteArray {
     val n = size.toInt()
     val out = ByteArray(n)
-    for (i in 0 until n) out[i] = get(i)
+    for (i in 0 until n) out[i] = get(i).toByte()
     return out
 }
 
@@ -17,7 +17,7 @@ fun ByteVector.toByteArray(): ByteArray {
 fun ByteArray.toByteVectorSafe(targetBytes: Int): ByteVector {
     val vec = ByteVector()
     val n = minOf(size, targetBytes)
-    for (i in 0 until n) vec.add(this[i])
-    for (i in n until targetBytes) vec.add(0.toByte())
+    for (i in 0 until n) vec.add(this[i].toShort())
+    for (i in n until targetBytes) vec.add(0.toShort())
     return vec
 }

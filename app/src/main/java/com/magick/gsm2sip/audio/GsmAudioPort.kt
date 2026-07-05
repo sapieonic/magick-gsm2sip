@@ -4,8 +4,8 @@ import com.magick.gsm2sip.util.GatewayLog
 import com.magick.gsm2sip.util.LogTag
 import org.pjsip.pjsua2.AudioMediaPort
 import org.pjsip.pjsua2.MediaFrame
-import org.pjsip.pjsua2.MediaFrameType
 import org.pjsip.pjsua2.MediaFormatAudio
+import org.pjsip.pjsua2.pjmedia_frame_type
 import java.util.concurrent.ArrayBlockingQueue
 
 /**
@@ -40,7 +40,7 @@ class GsmAudioPort(
     }
 
     override fun onFrameReceived(frame: MediaFrame) {
-        if (frame.type != MediaFrameType.PJMEDIA_FRAME_TYPE_AUDIO) return
+        if (frame.type != pjmedia_frame_type.PJMEDIA_FRAME_TYPE_AUDIO) return
         val data = frame.buf.toByteArray()
         // Drop oldest on overflow to keep latency bounded rather than blocking PJSIP.
         if (!toGsm.offer(data)) {
@@ -50,7 +50,7 @@ class GsmAudioPort(
     }
 
     override fun onFrameRequested(frame: MediaFrame) {
-        frame.type = MediaFrameType.PJMEDIA_FRAME_TYPE_AUDIO
+        frame.type = pjmedia_frame_type.PJMEDIA_FRAME_TYPE_AUDIO
         val data = fromGsm.poll() ?: silence
         frame.buf = data.toByteVectorSafe(frameBytes)
     }

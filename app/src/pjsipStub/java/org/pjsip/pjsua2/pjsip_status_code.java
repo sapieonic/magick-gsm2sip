@@ -7,19 +7,18 @@
  * excluded (see app/build.gradle.kts) and the genuine bindings are used.
  * At runtime with the stub, System.loadLibrary("pjsua2") fails and SIP is
  * disabled gracefully.
+ *
+ * NOTE: real pjsua2 (SWIG) exposes enums as plain int constants, not Java
+ * enums — this stub matches that shape.
  */
 package org.pjsip.pjsua2;
 
-public class pjsip_status_code {
-    private final int value;
-    private pjsip_status_code(int v) { this.value = v; }
-    public int swigValue() { return value; }
-    public static pjsip_status_code swigToEnum(int v) { return new pjsip_status_code(v); }
-    public static final pjsip_status_code PJSIP_SC_TRYING = new pjsip_status_code(100);
-    public static final pjsip_status_code PJSIP_SC_RINGING = new pjsip_status_code(180);
-    public static final pjsip_status_code PJSIP_SC_OK = new pjsip_status_code(200);
-    public static final pjsip_status_code PJSIP_SC_BUSY_HERE = new pjsip_status_code(486);
-    public static final pjsip_status_code PJSIP_SC_NOT_ACCEPTABLE_HERE = new pjsip_status_code(488);
-    public static final pjsip_status_code PJSIP_SC_DECLINE = new pjsip_status_code(603);
-    public static final pjsip_status_code PJSIP_SC_SERVICE_UNAVAILABLE = new pjsip_status_code(503);
+public final class pjsip_status_code {
+    public static final int PJSIP_SC_TRYING = 100;
+    public static final int PJSIP_SC_RINGING = 180;
+    public static final int PJSIP_SC_OK = 200;
+    public static final int PJSIP_SC_BUSY_HERE = 486;
+    public static final int PJSIP_SC_NOT_ACCEPTABLE_HERE = 488;
+    public static final int PJSIP_SC_SERVICE_UNAVAILABLE = 503;
+    public static final int PJSIP_SC_DECLINE = 603;
 }
