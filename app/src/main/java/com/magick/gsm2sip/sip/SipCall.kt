@@ -46,7 +46,7 @@ class SipCall : Call {
             pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED -> SipCallState.DISCONNECTED
             else -> return
         }
-        GatewayLog.d(LogTag.SIP, "call ${'$'}cid state=${'$'}{ci.stateText} (${'$'}{ci.lastStatusCode})")
+        GatewayLog.d(LogTag.SIP, "call $cid state=${ci.stateText} (${ci.lastStatusCode})")
         listener.onCallState(cid, mapped, ci.lastStatusCode.swigValue())
 
         if (mapped == SipCallState.DISCONNECTED) {
@@ -58,7 +58,7 @@ class SipCall : Call {
 
     override fun onCallMediaState(prm: OnCallMediaStateParam) {
         val cid = getId()
-        GatewayLog.d(LogTag.SIP, "call ${'$'}cid media state changed")
+        GatewayLog.d(LogTag.SIP, "call $cid media state changed")
         if (confirmedAudioMedia() != null) {
             listener.onCallMediaReady(cid)
         }

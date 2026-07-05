@@ -55,21 +55,21 @@ private fun HistoryRow(record: CallRecord) {
                 CallDirection.GSM_TO_SIP -> "GSM → SIP"
             }
             Text(dir, style = MaterialTheme.typography.titleSmall)
-            Text("SIP leg:  ${'$'}{record.sipRemote}", fontFamily = FontFamily.Monospace,
+            Text("SIP leg:  ${record.sipRemote}", fontFamily = FontFamily.Monospace,
                 style = MaterialTheme.typography.bodySmall)
-            Text("GSM leg:  ${'$'}{record.gsmNumber}", fontFamily = FontFamily.Monospace,
+            Text("GSM leg:  ${record.gsmNumber}", fontFamily = FontFamily.Monospace,
                 style = MaterialTheme.typography.bodySmall)
-            Text("Started:  ${'$'}{fmt(record.startedAtMillis)}",
+            Text("Started:  ${fmt(record.startedAtMillis)}",
                 style = MaterialTheme.typography.bodySmall)
             record.gsmConnectedAtMillis?.let {
-                Text("GSM up:   ${'$'}{fmt(it)}", style = MaterialTheme.typography.bodySmall)
+                Text("GSM up:   ${fmt(it)}", style = MaterialTheme.typography.bodySmall)
             }
             record.endedAtMillis?.let {
-                Text("Ended:    ${'$'}{fmt(it)}  (${'$'}{record.durationSeconds ?: 0}s)",
+                Text("Ended:    ${fmt(it)}  (${record.durationSeconds ?: 0}s)",
                     style = MaterialTheme.typography.bodySmall)
             }
             Text(
-                "Audio bridged: ${'$'}{record.audioBridged}   ·   ${'$'}{record.result}",
+                "Audio bridged: ${record.audioBridged}   ·   ${record.result}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.secondary,
             )

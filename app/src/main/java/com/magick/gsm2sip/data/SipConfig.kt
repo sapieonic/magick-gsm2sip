@@ -38,7 +38,7 @@ data class SipConfig(
     val dtmfRfc2833: Boolean = true,
 ) {
     /** SIP URI for this account, e.g. sip:1000@sip.vobiz.com */
-    val accountUri: String get() = "sip:${'$'}username@${'$'}domain"
+    val accountUri: String get() = "sip:$username@$domain"
 
     val isComplete: Boolean
         get() = domain.isNotBlank() && username.isNotBlank() && password.isNotBlank()

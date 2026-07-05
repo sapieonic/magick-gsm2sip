@@ -71,7 +71,7 @@ class SipStack(private val listener: SipListener) {
         applyCodecPriority(ep, config)
 
         ep.libStart()
-        GatewayLog.i(LogTag.SIP, "PJSIP library started (v${'$'}{ep.libVersion().full})")
+        GatewayLog.i(LogTag.SIP, "PJSIP library started (v${ep.libVersion().full})")
 
         val acc = SipAccount(listener) { id -> callObjectFor(id) }
         acc.create(buildAccountConfig(config))
@@ -82,7 +82,7 @@ class SipStack(private val listener: SipListener) {
     fun stop() {
         val ep = endpoint ?: return
         runCatching { account?.let { it.setRegistration(false); it.delete() } }
-            .onFailure { GatewayLog.w(LogTag.SIP, "account teardown: ${'$'}{it.message}") }
+            .onFailure { GatewayLog.w(LogTag.SIP, "account teardown: ${it.message}") }
         account = null
         runCatching {
             ep.libDestroy()
@@ -102,7 +102,7 @@ class SipStack(private val listener: SipListener) {
         val prm = CallOpParam(true)
         prm.statusCode = pjsip_status_code.PJSIP_SC_OK
         call.answer(prm)
-        GatewayLog.i(LogTag.SIP, "answered SIP call ${'$'}callId")
+        GatewayLog.i(LogTag.SIP, "answered SIP call $callId")
     }
 
     /** Ring (send 180) while the GSM leg is being set up. */
@@ -118,19 +118,19 @@ class SipStack(private val listener: SipListener) {
             val prm = CallOpParam(true)
             prm.statusCode = pjsip_status_code.swigToEnum(code)
             call.hangup(prm)
-            GatewayLog.i(LogTag.SIP, "hung up SIP call ${'$'}callId (code=${'$'}code)")
+            GatewayLog.i(LogTag.SIP, "hung up SIP call $callId (code=$code)")
         }
 
     /** Place an outbound SIP call to [number]@domain (used for GSM->SIP bridging). */
     fun makeCall(number: String): Int? {
         val acc = account ?: return null
-        val uri = "sip:${'$'}number@${'$'}{config.domain}"
+        val uri = "sip:$number@${config.domain}"
         return runCatching {
             val call = SipCall(acc, listener)
             val prm = CallOpParam(true)
             call.makeCall(uri, prm)
             acc.register(call)
-            GatewayLog.i(LogTag.SIP, "placed outbound SIP call to ${'$'}uri")
+            GatewayLog.i(LogTag.SIP, "placed outbound SIP call to $uri")
             call.id
         }.onFailure { GatewayLog.e(LogTag.SIP, "makeCall failed", it) }.getOrNull()
     }
@@ -146,7 +146,7 @@ class SipStack(private val listener: SipListener) {
     private inline fun withCall(callId: Int, block: (SipCall) -> Unit) {
         val call = callObjectFor(callId)
         if (call == null) {
-            GatewayLog.w(LogTag.SIP, "no call object for id ${'$'}callId")
+            GatewayLog.w(LogTag.SIP, "no call object for id $callId")
             return
         }
         runCatching { block(call) }.onFailure { GatewayLog.e(LogTag.SIP, "call op failed", it) }
@@ -162,7 +162,7 @@ class SipStack(private val listener: SipListener) {
             SipTransport.TLS -> pjsip_transport_type_e.PJSIP_TRANSPORT_TLS
         }
         ep.transportCreate(type, tcfg)
-        GatewayLog.i(LogTag.SIP, "transport ${'$'}{config.transport} on port ${'$'}{config.port}")
+        GatewayLog.i(LogTag.SIP, "transport ${config.transport} on port ${config.port}")
     }
 
     /**
@@ -178,7 +178,7 @@ class SipStack(private val listener: SipListener) {
             val idx = wanted.indexOfFirst { id.equals(it, ignoreCase = true) }
             val priority: Short = if (idx >= 0) (255 - idx).toShort() else 0.toShort()
             ep.codecSetPriority(id, priority)
-            GatewayLog.d(LogTag.SIP, "codec ${'$'}id -> priority ${'$'}priority")
+            GatewayLog.d(LogTag.SIP, "codec $id -> priority $priority")
         }
     }
 

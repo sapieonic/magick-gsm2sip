@@ -97,7 +97,7 @@ class AudioBridge(private val audioManager: AudioManager) {
         running.set(true)
         audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
         startPumps()
-        GatewayLog.i(LogTag.AUDIO, "audio bridge started (${'$'}CLOCK_RATE Hz, ${'$'}PTIME_MS ms)")
+        GatewayLog.i(LogTag.AUDIO, "audio bridge started ($CLOCK_RATE Hz, $PTIME_MS ms)")
         return true
     }
 

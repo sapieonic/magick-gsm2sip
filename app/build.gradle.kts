@@ -66,6 +66,16 @@ android {
         buildConfig = true
     }
 
+    lint {
+        // MODIFY_PHONE_STATE and CAPTURE_AUDIO_OUTPUT are signature/privileged
+        // permissions declared on purpose for system/rooted deployments (see
+        // README "Known limitations"). Suppress the ProtectedPermissions error
+        // rather than weakening lint globally; everything else still fails CI.
+        disable += "ProtectedPermissions"
+        abortOnError = true
+        warningsAsErrors = false
+    }
+
     testOptions {
         unitTests {
             // Let android.util.Log & friends return defaults instead of throwing

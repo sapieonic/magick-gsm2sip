@@ -31,7 +31,7 @@ sealed interface GatewayState {
             Stopped -> "Idle"
             Starting -> "Starting…"
             Registered -> "Registered"
-            is Calling -> "Calling ${'$'}remote"
+            is Calling -> "Calling $remote"
             is InCall -> if (audioBridged) "In call (bridged)" else "In call (no audio)"
             is Error -> "Error"
         }

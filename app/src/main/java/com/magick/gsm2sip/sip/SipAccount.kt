@@ -41,7 +41,7 @@ class SipAccount(
             code == 0 -> SipRegState.InProgress
             else -> SipRegState.Failed(code, prm.reason)
         }
-        GatewayLog.i(LogTag.SIP, "reg state: code=${'$'}code active=${'$'}active reason=${'$'}{prm.reason}")
+        GatewayLog.i(LogTag.SIP, "reg state: code=$code active=$active reason=${prm.reason}")
         listener.onRegState(state)
     }
 
@@ -58,7 +58,7 @@ class SipAccount(
         val wholeMsg = runCatching { prm.rdata.wholeMsg }.getOrDefault("")
         val forward = parseForwardHeader(wholeMsg)
 
-        GatewayLog.i(LogTag.SIP, "incoming INVITE from ${'$'}remoteUri; X-GSM-Forward=${'$'}forward")
+        GatewayLog.i(LogTag.SIP, "incoming INVITE from $remoteUri; X-GSM-Forward=$forward")
         listener.onIncomingCall(callId, remoteUri, forward)
     }
 
@@ -77,13 +77,13 @@ class SipAccount(
 
         fun buildConfig(config: SipConfig): AccountConfig = AccountConfig().apply {
             idUri = if (config.displayName.isNotBlank()) {
-                "\"${'$'}{config.displayName}\" <${'$'}{config.accountUri}>"
+                "\"${config.displayName}\" <${config.accountUri}>"
             } else {
                 config.accountUri
             }
 
             regConfig.apply {
-                registrarUri = "sip:${'$'}{config.domain}:${'$'}{config.port}"
+                registrarUri = "sip:${config.domain}:${config.port}"
                 timeoutSec = config.regExpirySeconds.toLong()
                 retryIntervalSec = 30L
                 registerOnAdd = true

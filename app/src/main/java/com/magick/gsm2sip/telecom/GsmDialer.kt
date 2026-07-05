@@ -38,7 +38,7 @@ class GsmDialer(private val context: Context) {
             .setCapabilities(PhoneAccount.CAPABILITY_SELF_MANAGED)
             .build()
         runCatching { telecom.registerPhoneAccount(account) }
-            .onFailure { GatewayLog.w(LogTag.GSM, "registerPhoneAccount: ${'$'}{it.message}") }
+            .onFailure { GatewayLog.w(LogTag.GSM, "registerPhoneAccount: ${it.message}") }
     }
 
     /**
@@ -51,7 +51,7 @@ class GsmDialer(private val context: Context) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE)
             != PackageManager.PERMISSION_GRANTED
         ) {
-            GatewayLog.e(LogTag.GSM, "CALL_PHONE not granted; cannot dial ${'$'}number")
+            GatewayLog.e(LogTag.GSM, "CALL_PHONE not granted; cannot dial $number")
             return false
         }
         val uri = Uri.fromParts("tel", number, null)
@@ -60,7 +60,7 @@ class GsmDialer(private val context: Context) {
             // Let Telecom pick the default SIM's calling account (the real radio).
         }
         return runCatching {
-            GatewayLog.i(LogTag.GSM, "placing GSM call to ${'$'}number")
+            GatewayLog.i(LogTag.GSM, "placing GSM call to $number")
             telecom.placeCall(uri, extras)
             true
         }.onFailure { GatewayLog.e(LogTag.GSM, "placeCall failed", it) }.getOrDefault(false)

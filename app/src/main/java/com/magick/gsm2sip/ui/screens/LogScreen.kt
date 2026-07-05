@@ -48,7 +48,7 @@ fun LogScreen(
         ) {
             items(logs) { entry ->
                 Text(
-                    text = "${'$'}{entry.time} ${'$'}{entry.tag} ${'$'}{entry.message}",
+                    text = "${entry.time} ${entry.tag} ${entry.message}",
                     color = colorFor(entry.level),
                     fontFamily = FontFamily.Monospace,
                     fontSize = 11.sp,

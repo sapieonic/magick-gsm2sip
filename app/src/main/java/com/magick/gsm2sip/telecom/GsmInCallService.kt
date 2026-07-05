@@ -35,7 +35,7 @@ class GsmInCallService : InCallService() {
 
         val number = call.details.handle?.schemeSpecificPart ?: "unknown"
         val incoming = call.details.callDirection == Call.Details.DIRECTION_INCOMING
-        GatewayLog.i(LogTag.GSM, "GSM call added: ${'$'}number (incoming=${'$'}incoming)")
+        GatewayLog.i(LogTag.GSM, "GSM call added: $number (incoming=$incoming)")
         TelecomBridge.emit(TelecomBridge.GsmEvent.Added(number, incoming))
         TelecomBridge.inCallService = this
 

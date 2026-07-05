@@ -63,7 +63,7 @@ class CallOrchestrator(
             SipRegState.InProgress -> setState(GatewayState.Starting)
             SipRegState.Unregistered -> setState(GatewayState.Stopped)
             is SipRegState.Failed ->
-                setState(GatewayState.Error("Registration failed: ${'$'}{state.code} ${'$'}{state.reason}"))
+                setState(GatewayState.Error("Registration failed: ${state.code} ${state.reason}"))
         }
     }
 
@@ -75,7 +75,7 @@ class CallOrchestrator(
             return
         }
         if (session != null) {
-            GatewayLog.w(LogTag.GATEWAY, "busy; declining INVITE from ${'$'}remoteUri")
+            GatewayLog.w(LogTag.GATEWAY, "busy; declining INVITE from $remoteUri")
             sipStack.hangup(callId, pjsip_status_code.PJSIP_SC_BUSY_HERE.swigValue())
             return
         }
@@ -88,7 +88,7 @@ class CallOrchestrator(
         )
         session = s
         setState(GatewayState.Calling(forwardNumber))
-        GatewayLog.i(LogTag.GATEWAY, "SIP->GSM: forwarding ${'$'}remoteUri to GSM ${'$'}forwardNumber")
+        GatewayLog.i(LogTag.GATEWAY, "SIP->GSM: forwarding $remoteUri to GSM $forwardNumber")
 
         // Ring the SIP caller while we set up the cellular leg, then dial GSM.
         sipStack.ring(callId)
@@ -117,7 +117,7 @@ class CallOrchestrator(
                 maybeBridge()
             }
             SipCallState.DISCONNECTED -> {
-                GatewayLog.i(LogTag.GATEWAY, "SIP leg disconnected (${'$'}code); tearing down GSM")
+                GatewayLog.i(LogTag.GATEWAY, "SIP leg disconnected ($code); tearing down GSM")
                 teardown("sip_disconnected")
             }
             else -> Unit
@@ -170,7 +170,7 @@ class CallOrchestrator(
             direction = CallDirection.GSM_TO_SIP,
             sipCallId = sipCallId,
             gsmNumber = gsmNumber,
-            sipRemote = "sip:${'$'}gsmNumber@${'$'}{config().domain}",
+            sipRemote = "sip:$gsmNumber@${config().domain}",
         )
         session = s
         setState(GatewayState.Calling(gsmNumber))
@@ -211,7 +211,7 @@ class CallOrchestrator(
 
     private fun failSession(reason: String, sipCode: Int) {
         val s = session ?: return
-        GatewayLog.e(LogTag.GATEWAY, "session failed: ${'$'}reason")
+        GatewayLog.e(LogTag.GATEWAY, "session failed: $reason")
         sipStack.hangup(s.sipCallId, sipCode)
         teardown(reason)
     }

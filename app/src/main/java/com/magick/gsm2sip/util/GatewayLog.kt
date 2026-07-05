@@ -44,17 +44,17 @@ object GatewayLog {
     fun i(tag: LogTag, message: String) = add(LogLevel.INFO, tag, message)
     fun w(tag: LogTag, message: String) = add(LogLevel.WARN, tag, message)
     fun e(tag: LogTag, message: String, t: Throwable? = null) =
-        add(LogLevel.ERROR, tag, if (t != null) "${'$'}message: ${'$'}{t.message}" else message)
+        add(LogLevel.ERROR, tag, if (t != null) "$message: ${t.message}" else message)
 
     fun clear() = _entries.update { emptyList() }
 
     private fun add(level: LogLevel, tag: LogTag, message: String) {
         val entry = LogEntry(System.currentTimeMillis(), level, tag, message)
         when (level) {
-            LogLevel.DEBUG -> Log.d(LOGCAT_TAG, "[${'$'}tag] ${'$'}message")
-            LogLevel.INFO -> Log.i(LOGCAT_TAG, "[${'$'}tag] ${'$'}message")
-            LogLevel.WARN -> Log.w(LOGCAT_TAG, "[${'$'}tag] ${'$'}message")
-            LogLevel.ERROR -> Log.e(LOGCAT_TAG, "[${'$'}tag] ${'$'}message")
+            LogLevel.DEBUG -> Log.d(LOGCAT_TAG, "[$tag] $message")
+            LogLevel.INFO -> Log.i(LOGCAT_TAG, "[$tag] $message")
+            LogLevel.WARN -> Log.w(LOGCAT_TAG, "[$tag] $message")
+            LogLevel.ERROR -> Log.e(LOGCAT_TAG, "[$tag] $message")
         }
         _entries.update { current ->
             val next = if (current.size >= MAX_ENTRIES) current.drop(current.size - MAX_ENTRIES + 1) else current
