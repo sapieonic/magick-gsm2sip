@@ -23,6 +23,11 @@ Common types:
 
 Add `!` after the type/scope (e.g. `feat!:`) or a `BREAKING CHANGE:` footer to trigger a major version bump.
 
+The project starts at `0.1.0` (pre-1.0, expect breaking changes). While the major version is `0`,
+`bump-minor-pre-major`/`bump-patch-for-minor-pre-major` in `release-please-config.json` keep bumps
+one notch down from the table above: `feat` bumps PATCH and a breaking change bumps MINOR. Once the
+project is ready for a stable `1.0.0`, use `release-please`'s `release-as` footer to force it.
+
 Examples:
 
 ```
@@ -55,8 +60,10 @@ Versioning is driven entirely by commit history via
 2. The `release-please` GitHub Action (`.github/workflows/release-please.yml`) opens/updates a
    "Release PR" that bumps `version.txt` and appends `CHANGELOG.md` based on the commits since the
    last release.
-3. Merging that Release PR tags the repo (`vX.Y.Z`) and publishes a GitHub Release with the
-   generated changelog.
+3. Merging that Release PR tags the repo (`vX.Y.Z`), publishes a GitHub Release with the generated
+   changelog, and a follow-up job builds `:app:assembleRelease` and attaches the APK to that
+   release. The app has no `signingConfig`, so this APK is **unsigned** — fine for sideloading by
+   testers, not for Play Store distribution.
 
 `app/build.gradle.kts` reads `version.txt` as the single source of truth for `versionName`, and
 derives `versionCode` from it (`MAJOR*1_000_000 + MINOR*1_000 + PATCH`) — never edit either by hand
