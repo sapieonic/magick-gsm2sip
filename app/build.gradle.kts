@@ -72,6 +72,14 @@ android {
             // in plain JVM unit tests.
             isReturnDefaultValues = true
             isIncludeAndroidResources = true
+            all {
+                it.testLogging {
+                    events("passed", "skipped", "failed")
+                    setExceptionFormat("full")
+                    showStackTraces = true
+                    showStandardStreams = true
+                }
+            }
         }
     }
 
