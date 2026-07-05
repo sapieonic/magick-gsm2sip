@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base theme; Compose drives the actual colors via MagickGsm2SipTheme.
+         We use a Material3 NoActionBar splash-friendly base. -->
+    <style name="Theme.MagickGsm2Sip" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>

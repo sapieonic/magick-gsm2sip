@@ -1,0 +1,19 @@
+# Gradle / build
+.gradle/
+build/
+app/build/
+local.properties
+
+# PJSIP native artifacts (supply your own — see docs/PJSIP_BUILD.md)
+app/libs/*.aar
+app/libs/*.jar
+app/src/main/jniLibs/**/*.so
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Keystores / secrets
+*.jks
+*.keystore
