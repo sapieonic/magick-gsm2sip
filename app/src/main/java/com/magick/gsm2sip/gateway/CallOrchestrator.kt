@@ -71,12 +71,12 @@ class CallOrchestrator(
         // Only accept an INVITE that carries a forwarding target and only when idle.
         if (forwardNumber.isNullOrBlank()) {
             GatewayLog.w(LogTag.GATEWAY, "INVITE without X-GSM-Forward -> declined")
-            sipStack.hangup(callId, pjsip_status_code.PJSIP_SC_NOT_ACCEPTABLE_HERE.swigValue())
+            sipStack.hangup(callId, pjsip_status_code.PJSIP_SC_NOT_ACCEPTABLE_HERE)
             return
         }
         if (session != null) {
             GatewayLog.w(LogTag.GATEWAY, "busy; declining INVITE from $remoteUri")
-            sipStack.hangup(callId, pjsip_status_code.PJSIP_SC_BUSY_HERE.swigValue())
+            sipStack.hangup(callId, pjsip_status_code.PJSIP_SC_BUSY_HERE)
             return
         }
 
@@ -103,7 +103,7 @@ class CallOrchestrator(
             )
         }
         if (!gsmDialer.placeGsmCall(forwardNumber)) {
-            failSession("GSM dial failed", sipCode = pjsip_status_code.PJSIP_SC_SERVICE_UNAVAILABLE.swigValue())
+            failSession("GSM dial failed", sipCode = pjsip_status_code.PJSIP_SC_SERVICE_UNAVAILABLE)
         }
     }
 

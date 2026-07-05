@@ -47,7 +47,7 @@ class SipCall : Call {
             else -> return
         }
         GatewayLog.d(LogTag.SIP, "call $cid state=${ci.stateText} (${ci.lastStatusCode})")
-        listener.onCallState(cid, mapped, ci.lastStatusCode.swigValue())
+        listener.onCallState(cid, mapped, ci.lastStatusCode)
 
         if (mapped == SipCallState.DISCONNECTED) {
             account.forget(cid)
@@ -70,7 +70,7 @@ class SipCall : Call {
         for (i in 0 until ci.media.size.toInt()) {
             val m = ci.media[i]
             if (m.type == pjmedia_type.PJMEDIA_TYPE_AUDIO) {
-                return runCatching { getAudioMedia(i.toLong()) }.getOrNull()
+                return runCatching { getAudioMedia(i) }.getOrNull()
             }
         }
         return null

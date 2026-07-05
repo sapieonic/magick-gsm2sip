@@ -17,7 +17,7 @@ public class Endpoint {
     public void libStart() throws Exception {}
     public void libDestroy() throws Exception {}
     public void delete() {}
-    public int transportCreate(pjsip_transport_type_e type, TransportConfig cfg) throws Exception { return 0; }
+    public int transportCreate(int type, TransportConfig cfg) throws Exception { return 0; }
     public void codecSetPriority(String codecId, short priority) throws Exception {}
     public CodecInfoVector codecEnum2() throws Exception { return new CodecInfoVector(); }
     public Version libVersion() { return new Version(); }

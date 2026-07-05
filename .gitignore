@@ -4,10 +4,15 @@ build/
 app/build/
 local.properties
 
-# PJSIP native artifacts (supply your own — see docs/PJSIP_BUILD.md)
+# PJSIP native artifacts — the prebuilt pjsua2 bindings (jar) + native libs are
+# committed (the .so via Git LFS; see docs/PJSIP_BUILD.md). Stray/other PJSIP
+# artifacts stay ignored.
 app/libs/*.aar
 app/libs/*.jar
+!app/libs/pjsua2.jar
 app/src/main/jniLibs/**/*.so
+!app/src/main/jniLibs/**/libpjsua2.so
+!app/src/main/jniLibs/**/libc++_shared.so
 
 # IDE
 .idea/

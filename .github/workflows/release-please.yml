@@ -48,6 +48,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ needs.release-please.outputs.tag_name }}
+          # Pull the real PJSIP native libs (Git LFS) so the release APK ships
+          # working SIP rather than pointer stubs.
+          lfs: true
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4

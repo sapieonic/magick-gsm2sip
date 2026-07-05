@@ -108,8 +108,8 @@ For internals see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 - Android **12 – 14** (API **31 – 34**; `minSdk = 31`, `targetSdk = 34`).
 - The app **must be set as the default phone/dialer app** to observe and control
   GSM call state (`GsmInCallService` binds only when the app holds the dialer role).
-- The PJSIP `pjsua2` native libraries and Java bindings. ABIs built by default:
-  `arm64-v8a`, `armeabi-v7a`, `x86_64`.
+- The PJSIP `pjsua2` native libraries and Java bindings — **bundled in this repo**
+  (jar in git, `.so` via Git LFS). ABIs: `arm64-v8a`, `armeabi-v7a`, `x86_64`.
 - For real audio bridging: a **rooted** device with a Magisk module that disables
   Android's audio-concurrency lock (see [Known limitations](#known-limitations)
   and [docs/MAGISK.md](docs/MAGISK.md)).
@@ -119,49 +119,70 @@ For internals see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Build & setup
 
-### 1. Provide PJSIP (recommended: prebuilt AAR)
+### 1. Clone (Git LFS required)
 
-The `pjsua2` bindings (`org.pjsip.pjsua2.*`) plus `libpjsua2.so` must be built
-with the **opus, g722, and g711** codecs enabled. See
-[docs/PJSIP_BUILD.md](docs/PJSIP_BUILD.md) for how to build them with
-[pjsip-android-builder](https://github.com/vpandey-om/pjsip-android-builder) (or
-the official [pjproject](https://github.com/pjsip/pjproject)).
+The prebuilt PJSIP native libraries (`libpjsua2.so`, ~96 MB across three ABIs)
+are committed via **[Git LFS](https://git-lfs.com/)**. Install it *before*
+cloning, otherwise the `.so` files arrive as small text pointer stubs and PJSIP
+fails to load at runtime.
 
-Drop the result into `app/libs/`:
-
-```
-app/libs/pjsua2-release.aar        # preferred: single AAR (bindings + .so)
-```
-
-or, alternatively, the raw jar plus native libraries:
-
-```
-app/libs/pjsua2.jar
-app/src/main/jniLibs/arm64-v8a/libpjsua2.so
-app/src/main/jniLibs/armeabi-v7a/libpjsua2.so
-app/src/main/jniLibs/x86_64/libpjsua2.so
+```bash
+brew install git-lfs      # macOS  (Linux: apt-get install git-lfs)
+git lfs install           # one-time per machine
+git clone git@github.com:sapieonic/magick-gsm2sip.git
 ```
 
-`app/build.gradle.kts` selects the dependency automatically:
-`pjsua2-release.aar` if present, else `pjsua2.jar`, else the **stub**.
+Already cloned before installing LFS? Run `git lfs install && git lfs pull`.
+Verify you have real binaries, not pointers:
 
-### 2. Stub fallback (no native libs)
+```bash
+git lfs ls-files                                   # lists the 6 .so files
+file app/src/main/jniLibs/arm64-v8a/libpjsua2.so   # -> "ELF ... shared object"
+```
 
-If neither artifact is present, the build compiles against an API-compatible
-stub source set (`app/src/pjsipStub/java`) so the project **builds and unit
-tests run without the native code**. At runtime `System.loadLibrary("pjsua2")`
-fails gracefully (logged in `App.loadNativeLibraries()`) and SIP features stay
-disabled until a real AAR is dropped in. This is intended for CI and for editing
-non-SIP code. See [docs/PJSIP_BUILD.md](docs/PJSIP_BUILD.md).
+### 2. What's bundled
+
+PJSIP is checked in, so the project builds with SIP enabled out of the box — no
+manual PJSIP build needed:
+
+```
+app/libs/pjsua2.jar                            # pjsua2 Java bindings (regular git)
+app/src/main/jniLibs/<abi>/libpjsua2.so        # native PJSIP (Git LFS)
+app/src/main/jniLibs/<abi>/libc++_shared.so    # NDK C++ runtime (Git LFS)
+```
+
+ABIs: `arm64-v8a`, `armeabi-v7a`, `x86_64`. Codecs compiled in: **G.711, G.722,
+Opus**, plus **OpenSSL** for SIP/TLS. `app/build.gradle.kts` auto-selects the
+real bindings when `app/libs/pjsua2.jar` (or a `pjsua2-release.aar`) is present,
+otherwise it falls back to the stub (below).
 
 ### 3. Build & test
 
 ```bash
-./gradlew assembleDebug     # build the debug APK
-./gradlew test              # run JVM unit tests (works with the stub)
+./gradlew assembleDebug     # build the debug APK (with real PJSIP)
+./gradlew installDebug      # build + install onto a connected device/emulator
+./gradlew test              # run JVM unit tests
 ```
 
 Install the APK, launch the app, and set it as the default dialer when prompted.
+Confirm PJSIP loaded: `adb logcat | grep libpjsua2` → `loaded libpjsua2.so`.
+
+### 4. Stub fallback (building without the native libs)
+
+If the jar/AAR is absent (e.g. CI without LFS, or when editing non-SIP code) the
+build compiles against an API-compatible stub source set
+(`app/src/pjsipStub/java`) so the project **builds and unit tests run without the
+native code**. At runtime `System.loadLibrary("pjsua2")` fails gracefully
+(logged in `App.loadNativeLibraries()`) and SIP stays disabled. The stub mirrors
+real pjsua2's **int-constant enum** API.
+
+### 5. Rebuilding PJSIP (only if you need to)
+
+You only need this to change codecs, ABIs, or the PJSIP version — the prebuilt
+artifacts above cover normal development. Full, reproducible instructions
+(Docker + `pjsip-android-builder`, compiling the jar, copying the `.so` into
+`jniLibs`, re-committing via LFS) are in
+[docs/PJSIP_BUILD.md](docs/PJSIP_BUILD.md).
 
 ---
 

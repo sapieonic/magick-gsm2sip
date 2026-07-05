@@ -11,7 +11,7 @@
 package org.pjsip.pjsua2;
 
 public class OnRegStateParam {
-    public pjsip_status_code code = pjsip_status_code.PJSIP_SC_OK;
+    public int code = pjsip_status_code.PJSIP_SC_OK;
     public String reason = "";
     public OnRegStateParam() {}
 }

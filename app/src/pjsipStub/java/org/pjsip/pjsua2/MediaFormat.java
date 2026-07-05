@@ -7,10 +7,15 @@
  * excluded (see app/build.gradle.kts) and the genuine bindings are used.
  * At runtime with the stub, System.loadLibrary("pjsua2") fails and SIP is
  * disabled gracefully.
+ *
+ * NOTE: SWIG getter/setter shape so the stub is BINARY-compatible with the real
+ * bindings (unit tests run against it after app code compiled against the jar).
  */
 package org.pjsip.pjsua2;
 
 public class MediaFormat {
-    public int type;
+    private int type;
     public MediaFormat() {}
+    public int getType() { return type; }
+    public void setType(int value) { this.type = value; }
 }

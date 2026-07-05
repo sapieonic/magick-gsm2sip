@@ -11,6 +11,6 @@
 package org.pjsip.pjsua2;
 
 public class CallMediaInfo {
-    public pjmedia_type type = pjmedia_type.PJMEDIA_TYPE_NONE;
+    public int type = pjmedia_type.PJMEDIA_TYPE_NONE;
     public CallMediaInfo() {}
 }

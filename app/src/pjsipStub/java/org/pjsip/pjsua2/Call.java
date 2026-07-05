@@ -18,7 +18,7 @@ public class Call {
     public void answer(CallOpParam prm) throws Exception {}
     public void hangup(CallOpParam prm) throws Exception {}
     public void makeCall(String dst, CallOpParam prm) throws Exception {}
-    public AudioMedia getAudioMedia(long medIdx) throws Exception { return new AudioMedia(); }
+    public AudioMedia getAudioMedia(int medIdx) throws Exception { return new AudioMedia(); }
     public void delete() {}
     public void onCallState(OnCallStateParam prm) {}
     public void onCallMediaState(OnCallMediaStateParam prm) {}

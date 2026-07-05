@@ -11,10 +11,10 @@
 package org.pjsip.pjsua2;
 
 public class CallInfo {
-    public pjsip_inv_state state = pjsip_inv_state.PJSIP_INV_STATE_NULL;
+    public int state = pjsip_inv_state.PJSIP_INV_STATE_NULL;
     public String remoteUri = "";
     public String stateText = "";
-    public pjsip_status_code lastStatusCode = pjsip_status_code.PJSIP_SC_OK;
+    public int lastStatusCode = pjsip_status_code.PJSIP_SC_OK;
     public CallMediaInfoVector media = new CallMediaInfoVector();
     public CallInfo() {}
 }
