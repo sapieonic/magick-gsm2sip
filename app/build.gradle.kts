@@ -12,6 +12,19 @@ val pjsipAar = file("libs/pjsua2-release.aar")
 val pjsipJar = file("libs/pjsua2.jar")
 val usePjsipStub = !pjsipAar.exists() && !pjsipJar.exists()
 
+// --- Versioning ----------------------------------------------------------
+// version.txt (repo root) is the single source of truth, bumped by the
+// release-please workflow (.github/workflows/release-please.yml) from
+// Conventional Commits merged to main. versionCode is derived from it so
+// the two never drift: MAJOR*1_000_000 + MINOR*1_000 + PATCH.
+val versionNameProp = rootProject.file("version.txt").readText().trim()
+val (versionMajor, versionMinor, versionPatch) = versionNameProp
+    .split("-", limit = 2)[0]
+    .split(".")
+    .map { it.toInt() }
+    .let { Triple(it[0], it[1], it[2]) }
+val computedVersionCode = versionMajor * 1_000_000 + versionMinor * 1_000 + versionPatch
+
 android {
     namespace = "com.magick.gsm2sip"
     compileSdk = 34
@@ -27,8 +40,8 @@ android {
         applicationId = "com.magick.gsm2sip"
         minSdk = 31          // Android 12 (backward-compat floor)
         targetSdk = 34       // Android 14
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = computedVersionCode
+        versionName = versionNameProp
 
         // PJSIP ships native .so libs for these ABIs. Trim to what your devices need.
         ndk {

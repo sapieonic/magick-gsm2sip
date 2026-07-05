@@ -17,3 +17,6 @@ app/src/main/jniLibs/**/*.so
 # Keystores / secrets
 *.jks
 *.keystore
+
+# Node (husky/commitlint tooling only — no app code)
+node_modules/

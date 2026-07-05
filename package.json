@@ -1,0 +1,13 @@
+{
+  "name": "magick-gsm2sip",
+  "private": true,
+  "description": "Commit-lint tooling for this repo. The app itself is a Gradle/Android project; this package.json exists only to drive Husky + commitlint.",
+  "scripts": {
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "husky": "^9.1.6"
+  }
+}
